@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
+import { RequestValidationError } from '../errors/request-validation-error';
+import { DataBaseConnectionError } from '../errors/database-connection-error';
 
 const router = express.Router();
 
@@ -25,10 +27,12 @@ router.post(
     if (!errors.isEmpty()) {
       // thrown errors will be caught by express and passed to our
       // CUSTOM ERROR HANDLER MIDDLEWARE
-      throw Error('Invalid email or password.');
+      // throw Error('Invalid email or password.'); // old implementation - default way
+      // custom way - a "themed" Error so we can differentiate error types
+      throw new RequestValidationError(errors.array()); // pass all errors to our custom Error
     }
 
-    throw Error('Error in database.');
+    throw new DataBaseConnectionError();
 
     const { email, password } = req.body;
 

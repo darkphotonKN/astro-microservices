@@ -16,6 +16,7 @@ app.use(signInRouter);
 app.use(signUpRouter);
 app.use(signOutRouter);
 
+// custom middleware to handle errors
 app.use(errorHandler);
 
 app.listen(3000, () => {
