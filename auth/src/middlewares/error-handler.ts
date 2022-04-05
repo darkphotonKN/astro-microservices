@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { RequestValidationError } from '../errors/request-validation-error';
-import { DataBaseConnectionError } from '../errors/database-connection-error';
+import { CustomError } from '../errors/custom-error';
 
 /**
  * Handles all errors thrown in the application as they will be caught by express and handled
@@ -17,20 +16,12 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  if (error instanceof RequestValidationError) {
-    // returning a consistent error format for the entire application
-    // converting the error type from express-validator's ValidationError
-    // to our custom { errors: { message: string field?: string }[] }
-    const formattedErrors = error.errors.map((item) => ({
-      message: item.msg,
-      field: item?.param,
-    }));
-    console.log(JSON.stringify(formattedErrors, null, 2));
-    return res.status(400).json(formattedErrors);
+  // this single custom abstract class covers for all types of custom errors for the app
+  if (error instanceof CustomError) {
+    return res
+      .status(error.STATUS_CODE)
+      .json({ errors: error.serializeErrors() });
   }
-  if (error instanceof DataBaseConnectionError) {
-    console.log('Error was an instance of DataBaseConnectionError');
-    return res.status(500).json(error);
-  }
+
   res.status(400).send(error.message); // error.message will be the error thrown
 };
