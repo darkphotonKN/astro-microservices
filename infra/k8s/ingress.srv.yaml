@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: astro.dev
+      http:
+        paths:
+          - path: /api/users/?(.*)
+            # anytime the route in our app matches the pattern of the above path ingress forwards it the below backend
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-srv # matches the name in metadata: name: auth-srv in the auth-deply.yaml
+                port:
+                  number: 3000
