@@ -3,8 +3,9 @@ import { CustomError } from '../errors/custom-error';
 
 /**
  * Handles all errors thrown in the application as they will be caught by express and handled
- * via this middleware.
- * This middleware require exactly these 4 arguments so DO NOT EDIT.
+ * via this middleware automatically (if error is thrown anywhere in the application).
+ *
+ * This middleware require exactly these 4 arguments to be considered a middelware by express so DO NOT EDIT.
  * @param error - incoming error
  * @param req - request object passed in by express
  * @param res - response object passed in by express

@@ -7,12 +7,13 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
   rules:
-    - host: astro.dev
+    - host: astro.dev # change your localhost dev port to point to this URL for testing
       http:
         paths:
           - path: /api/users/?(.*)
             # anytime the route in our app matches the pattern of the above path ingress forwards it the below backend
             pathType: Prefix
+            # any request made to above path is forwarded to here
             backend:
               service:
                 name: auth-srv # matches the name in metadata: name: auth-srv in the auth-deply.yaml
